@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#120d1f">
+<title>Rompetorres: Galactic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#ffcf4a;--gold2:#e59a12;--ink:#120d1f;--panel:#231a3a;--panel2:#2f2450;--line:#4c3d78;--txt:#f3eefc;--mut:#a99cc9;--blue:#3d8bff;--red:#ff4d5e;--elx:#d455ff;--good:#57e08a;
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+button,input,select{font-family:inherit}
+html,body{height:100%;background:var(--ink);overflow:hidden;color:var(--txt);font-family:Nunito,system-ui,sans-serif;touch-action:none}
+body{background:radial-gradient(ellipse at 50% 0%,#3a2366 0%,#1a1230 45%,#0d0918 100%)}
+.f{font-family:"Lilita One",Nunito,system-ui,sans-serif;letter-spacing:.5px;font-weight:400}
+#app{position:fixed;inset:0;display:flex;justify-content:center}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;padding:calc(var(--sat) + 10px) 12px calc(var(--sab) + 10px);overflow:hidden}
+.screen.on{display:flex;animation:fadeIn .28s ease}
+@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+.wrap{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;height:100%}
+.scroll{overflow-y:auto;touch-action:pan-y;-webkit-overflow-scrolling:touch;width:100%}
+.btn{font-family:"Lilita One",sans-serif;font-size:20px;letter-spacing:.6px;color:#3b2200;border:none;border-radius:14px;padding:13px 22px;min-width:220px;cursor:pointer;
+  background:linear-gradient(180deg,#ffe58a 0%,var(--gold) 40%,var(--gold2) 100%);box-shadow:0 5px 0 #8a5300,0 8px 18px #0008,inset 0 2px 0 #fff8;text-shadow:0 1px 0 #fff6;transition:transform .08s,box-shadow .08s;position:relative}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #8a5300,0 4px 10px #0008,inset 0 2px 0 #fff8}
+.btn.blue{color:#fff;text-shadow:0 2px 0 #0006;background:linear-gradient(180deg,#8cc2ff 0%,#3d8bff 45%,#1f5fd6 100%);box-shadow:0 5px 0 #133c8a,0 8px 18px #0008,inset 0 2px 0 #fff6}
+.btn.blue:active{box-shadow:0 2px 0 #133c8a,0 4px 10px #0008}
+.btn.dark{color:#e8defa;text-shadow:0 2px 0 #0006;background:linear-gradient(180deg,#5a4a88,#3a2d62);box-shadow:0 5px 0 #1c1436,0 8px 18px #0008,inset 0 2px 0 #fff3}
+.btn.dark:active{box-shadow:0 2px 0 #1c1436}
+.btn.sm{font-size:15px;padding:9px 14px;min-width:0;border-radius:11px}
+.btn[disabled]{filter:grayscale(1) brightness(.6);pointer-events:none}
+.panel{background:linear-gradient(180deg,var(--panel2),var(--panel));border:2px solid var(--line);border-radius:18px;box-shadow:0 10px 30px #0009,inset 0 1px 0 #ffffff14}
+h2.f{font-size:28px;text-shadow:0 3px 0 #0008;text-align:center}
+.sub{color:var(--mut);font-size:14px;text-align:center;line-height:1.4}
+.pill{white-space:nowrap;display:inline-flex;align-items:center;gap:5px;background:#0006;border:1px solid #ffffff1c;border-radius:20px;padding:4px 11px;font-weight:900;font-size:15px}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:2px solid var(--line);background:var(--panel2);color:#fff;font-size:19px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+
+/* ===== Título ===== */
+#title .logo{margin-top:6vh;text-align:center;filter:drop-shadow(0 8px 0 #0007)}
+#title .logo img.lg{width:min(92vw,420px);height:auto;display:block;margin:0 auto}
+#title .logo .l1{font-size:46px;line-height:.95;background:linear-gradient(180deg,#fff 0%,#ffe27a 45%,#f39c12 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1.5px #6b3a00}
+#title .logo .l2{font-size:64px;line-height:.9;margin-top:2px;background:linear-gradient(180deg,#ffd0ff 0%,#d455ff 50%,#7a1fb8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:2px #2b0a45}
+#title canvas{margin:8px 0 4px}
+#title .menu{display:flex;flex-direction:column;gap:14px;align-items:center;margin-top:auto;margin-bottom:4vh}
+#title .stats{display:flex;gap:8px;margin-top:6px}
+
+/* ===== Mapa ===== */
+#map .hdr .btn{white-space:nowrap}
+#map .hdr .pill{font-size:14px;padding:4px 9px}
+#map .hdr,.hdr{width:100%;display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:8px}
+#mapScroll{flex:1;width:100%;position:relative;border-radius:18px;overflow-y:auto;touch-action:pan-y;
+  background:radial-gradient(ellipse at 50% 20%,#3b6b3a,#22401f 60%,#162c14);border:2px solid #4a7a3c;box-shadow:inset 0 0 40px #000a}
+#mapInner{position:relative;width:100%}
+#mapInner svg{position:absolute;inset:0;width:100%;height:100%}
+.node{position:absolute;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 35% 30%,#fff3,transparent 60%),var(--nc,#6b5a9a);border:3px solid #0008;box-shadow:0 4px 0 #0007;transition:transform .15s;cursor:pointer}
+.node canvas{pointer-events:none}
+.node.done{filter:grayscale(.7) brightness(.55)}
+.node.locked{filter:brightness(.5) saturate(.6);cursor:default}
+.node.avail{animation:pulse 1.1s ease-in-out infinite;border-color:#fff}
+.node.cur{box-shadow:0 0 0 4px var(--gold),0 4px 0 #0007}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.13)}}
+.node .wbadge{position:absolute;top:-6px;right:-8px;font-size:16px;filter:drop-shadow(0 1px 1px #000)}
+.node .tbadge{right:auto;left:-8px}
+.node .lbl{position:absolute;top:56px;font-size:10px;font-weight:900;white-space:nowrap;color:#fff;text-shadow:0 1px 2px #000}
+.legend{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;font-size:11px;color:var(--mut);margin-top:8px}
+
+/* ===== Batalla ===== */
+#battle{padding:var(--sat) 0 calc(var(--sab) + 2px)}
+#btop{position:absolute;left:0;right:0;top:0;display:flex;align-items:flex-start;justify-content:space-between;padding:5px 7px;pointer-events:none;z-index:2}
+.crownCol{display:flex;flex-direction:column;gap:2px;background:#0008;border-radius:10px;padding:3px 6px}
+.crownCol .crowns{font-weight:900;font-size:13px;min-height:18px}
+.crownCol .crowns i{width:18px;height:16px}
+.crowns{display:flex;gap:2px;align-items:center}
+img.emo{height:1.15em;width:auto;vertical-align:-0.22em;display:inline-block}
+.crowns i{width:22px;height:20px;display:inline-block;background-size:contain;background-repeat:no-repeat;opacity:.25;filter:grayscale(1)}
+.crowns i.on{opacity:1;filter:none;animation:pop .4s}
+@keyframes pop{0%{transform:scale(2)}100%{transform:scale(1)}}
+#timerBox{text-align:center;min-width:74px;background:#0008;border-radius:10px;padding:3px 8px;margin-right:40px}
+#timer{font-size:21px;line-height:1;text-shadow:0 2px 0 #000}
+#tlabel{font-size:9.5px;color:var(--gold);font-weight:900;letter-spacing:.3px;white-space:nowrap}
+#tlabel:empty{display:none}
+#cvWrap{position:relative;flex:0 0 auto}
+#cv{display:block;border-radius:0 0 10px 10px;touch-action:none;box-shadow:0 0 0 2px #0008,0 10px 30px #000a}
+#banner{position:absolute;left:0;right:0;top:40%;text-align:center;pointer-events:none;font-size:34px;color:#fff;text-shadow:0 3px 0 #000,0 0 20px #000;opacity:0;transition:opacity .3s,transform .3s;transform:scale(.8)}
+#banner.on{opacity:1;transform:scale(1)}
+#banner small{display:block;font-size:15px;font-family:Nunito;font-weight:900;color:var(--gold)}
+#hud{display:flex;align-items:flex-end;gap:6px;padding:9px 6px 0;width:100%;max-width:440px;justify-content:center}
+#nextBox{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:900;color:var(--mut)}
+#hand{display:flex;gap:6px}
+#hand .card{width:clamp(56px, calc((100vw - 66px) / 4.3), 92px);height:auto;aspect-ratio:72/92}
+#hand.h5{gap:4px} #hand.h5 .card{width:clamp(48px, calc((100vw - 62px) / 5.4), 76px)} #hand.h5 .card .nm{font-size:9px}
+#hand .card .nm{font-size:clamp(9.5px, 2.8vw, 12px)}
+#nextBox .card.mini{width:clamp(34px, 9.5vw, 52px);height:auto;aspect-ratio:46/58}
+@media (max-height:620px){ #hand .card{width:clamp(48px, calc((100vw - 70px) / 4.5), 66px)} #title .logo{margin-top:1.5vh} #title .logo img.lg{width:min(80vw,330px)} #title .logo .l1{font-size:38px} #title .logo .l2{font-size:52px} #titleCv{width:240px!important;height:152px!important} #title .menu{gap:10px;margin-bottom:2vh} .btn{padding:10px 18px;font-size:18px} }
+@media (max-width:370px){ .card .nm{font-size:9px} .card .cost{width:23px;height:23px;font-size:14px;top:-6px;left:-6px} }
+.card{position:relative;width:72px;height:92px;border-radius:11px;cursor:pointer;transition:transform .13s,filter .15s;flex:0 0 auto;
+  background:linear-gradient(180deg,#4f8cff,#1d3a8a);border:2px solid #bcd4ff;box-shadow:0 4px 0 #0008,inset 0 1px 0 #fff5;overflow:visible}
+.card.r1{background:linear-gradient(180deg,#ffae3d,#a14a00);border-color:#ffe0a8}
+.card.r2{background:linear-gradient(180deg,#c070ff,#4a0f99);border-color:#e6c4ff;box-shadow:0 4px 0 #0008,0 0 12px #c47bff99,inset 0 1px 0 #fff5}
+.card.evo{box-shadow:0 4px 0 #0008,0 0 14px #ffd04aee,inset 0 1px 0 #fff8;border-color:#ffe680}
+.evoTag{position:absolute;top:2px;left:50%;transform:translateX(-50%);background:linear-gradient(#ffe066,#e09a1a);color:#3a2000;font:900 9px sans-serif;padding:1px 5px;border-radius:6px;box-shadow:0 1px 0 #0006}
+#hand2{display:none;position:absolute;top:0;left:0;right:0;justify-content:center;gap:4px;padding:4px;transform:rotate(180deg);background:linear-gradient(0deg,#0000,#120d1fcc);z-index:6}
+#hand2 .card{width:52px;height:auto;aspect-ratio:72/92} #hand2 .card.sel{transform:translateY(-6px);outline:2px solid #ffe066}
+#hand2 .e2{align-self:center;color:#e8c8ff;font-weight:900;font-size:15px;padding:0 6px}
+.spinGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
+.spinCell{background:#2a2040;border:2px solid #4a3a70;border-radius:10px;padding:12px 2px;text-align:center;font-weight:900;color:#fff;transition:.08s}
+.spinCell.on{background:linear-gradient(#ffe066,#e09a1a);color:#3a2000;transform:scale(1.08);border-color:#fff2b0}
+.card .frm{position:absolute;left:-4%;top:-3%;width:108%;height:106%;pointer-events:none;z-index:3;opacity:.92}
+.card .cost,.card .lv,.card .ibtn,.card .evoTag{z-index:4}
+.iconRow{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;width:100%;max-width:340px;margin:2px auto}
+.iconTile{background:linear-gradient(#3a2e5a,#241a3a);border:2px solid #5a4a8a;border-radius:12px;color:#fff;padding:5px 0 3px;display:flex;flex-direction:column;align-items:center;cursor:pointer;font:inherit}
+.iconTile span{font-size:21px;line-height:1.1} .iconTile small{font-size:9px;font-weight:800;opacity:.9}
+.iconTile:active{transform:scale(.94)}
+.evBanner{background:linear-gradient(90deg,#ff7a1a,#e0407a);color:#fff;border-radius:12px;padding:6px 10px;margin:4px auto;max-width:330px;text-align:center;font-size:13px;box-shadow:0 3px 0 #0006}
+#rwCards .choice{animation:flipIn .55s cubic-bezier(.2,1.4,.4,1) both}
+#rwCards .choice:nth-child(2){animation-delay:.12s} #rwCards .choice:nth-child(3){animation-delay:.24s} #rwCards .choice:nth-child(4){animation-delay:.36s}
+@keyframes flipIn{0%{transform:perspective(500px) rotateY(90deg) scale(.7);opacity:0}100%{transform:none;opacity:1}}
+#rwCards .card.r2{animation:glowE 1.6s ease-in-out infinite} @keyframes glowE{50%{box-shadow:0 4px 0 #0008,0 0 22px #e070ffee}}
+.card.hero{background:linear-gradient(180deg,#ffd75a,#a8641a);border-color:#fff2b0;box-shadow:0 4px 0 #0008,0 0 14px #ffd04acc,inset 0 1px 0 #fff8}
+.card.hero .art img{border-radius:8px}
+.card.sp{background:linear-gradient(180deg,#ff7a4a,#8a1f12);border-color:#ffc0a0}
+.card .art{position:absolute;inset:3px 3px 16px 3px;border-radius:7px;background:radial-gradient(circle at 50% 40%,#ffffff30,#0003);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.card .art img{width:100%;height:100%;object-fit:contain;filter:saturate(1.3) contrast(1.12) brightness(1.04) drop-shadow(0 2px 2px #000a)}
+.card .art{background:radial-gradient(circle at 50% 38%,#ffffff55,#ffffff10 55%,#0004)!important}
+.card .frm{opacity:1!important;filter:saturate(1.25) contrast(1.08)}
+.card .nm{color:#fff;font-weight:900;text-shadow:0 1px 0 #000,0 0 3px #000}
+.card .nm{position:absolute;z-index:4;left:3px;right:3px;bottom:3px;background:linear-gradient(0deg,#000a,#0000);border-radius:0 0 7px 7px;text-align:center;font-size:10.5px;font-weight:900;text-shadow:0 1px 2px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px}
+.card .cost{position:absolute;top:-8px;left:-8px;width:27px;height:27px;display:flex;align-items:center;justify-content:center;font-family:"Lilita One";font-size:16px;color:#fff;text-shadow:0 1px 0 #000;
+  background:radial-gradient(circle at 35% 30%,#ffb8ff,#c43ae8 50%,#6a0e8f);border-radius:50% 50% 50% 50%/55% 55% 45% 45%;border:2px solid #fff;box-shadow:0 2px 0 #0008}
+.card .lv{position:absolute;top:-6px;right:-6px;font-size:10px;font-weight:900;background:#111a;border:1.5px solid var(--gold);color:var(--gold);border-radius:8px;padding:0 4px;line-height:15px}
+.card .tags{position:absolute;right:2px;bottom:17px;display:flex;gap:1px;pointer-events:none}
+.card .tags span{font-size:11px;line-height:17px;width:18px;height:18px;text-align:center;background:#0009;border-radius:50%;border:1px solid #ffffff40}
+.card.mini .tags{display:none}
+.card.big .tags{bottom:22px}.card.big .tags span{font-size:13px;width:22px;height:22px;line-height:21px}
+.ibtn{position:absolute;top:-11px;right:-9px;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9fd0ff,#2f78e8);border:2px solid #fff;color:#fff;font:italic 900 15px Georgia,serif;display:none;align-items:center;justify-content:center;box-shadow:0 2px 6px #000a;z-index:3;cursor:pointer}
+.card.sel .ibtn{display:flex;animation:pop .25s}
+.card.sel .lv{display:none}
+.legend2{font-size:11px;color:var(--mut);text-align:center;margin-top:8px;line-height:1.5}
+.card.off{filter:grayscale(.85) brightness(.5) blur(1.2px)}
+.card.sel{transform:translateY(-12px) scale(1.04);box-shadow:0 0 0 3px var(--gold),0 0 22px #ffcf4aaa,0 4px 0 #0008}
+.card.mini{width:46px;height:58px;border-radius:8px}.card.mini .nm{display:none}.card.mini .art{inset:3px}.card.mini .cost{width:19px;height:19px;font-size:11px;top:-6px;left:-6px}.card.mini .lv{display:none}
+.card.big{width:94px;height:120px}.card.big .nm{font-size:12px;bottom:4px}.card.big .art{inset:5px 5px 22px 5px}
+#ebar{position:relative;width:calc(100% - 20px);max-width:420px;height:20px;border-radius:10px;margin:7px 0 2px;background:#1d0b2a;border:2px solid #7a3aa0;box-shadow:inset 0 2px 6px #000a;overflow:hidden}
+#efill{position:absolute;left:0;top:0;bottom:0;width:50%;background:linear-gradient(180deg,#f3a8ff,#c43ae8 55%,#8a17b8);box-shadow:0 0 12px #e070ff;transition:width .1s linear}
+#eticks{position:absolute;inset:0;display:flex}#eticks i{flex:1;border-right:2px solid #0006}
+#enum{position:absolute;left:-2px;top:-5px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-family:"Lilita One";font-size:17px;z-index:2;
+  background:radial-gradient(circle at 35% 30%,#ffb8ff,#c43ae8 50%,#6a0e8f);border-radius:50%;border:2px solid #fff}
+#ebarWrap{position:relative;width:100%;display:flex;justify-content:center}
+#hint{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);background:#000c;border:2px solid var(--gold);color:#fff;padding:8px 14px;border-radius:14px;font-weight:900;font-size:14px;text-align:center;white-space:nowrap;pointer-events:none;display:none;animation:bob 1.2s ease-in-out infinite}
+#hint small{font-size:11px;color:var(--mut)}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-6px)}}
+#toast{position:absolute;left:50%;top:50%;max-width:92vw;white-space:normal!important;text-align:center;transform:translate(-50%,-50%);background:#000c;border:2px solid #fff3;padding:9px 16px;border-radius:12px;font-weight:900;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;z-index:9}
+#bQuit{position:absolute;right:6px;top:6px;width:32px;height:32px;font-size:15px;z-index:3;opacity:.85;border-radius:10px}
+
+/* ===== Paneles genéricos ===== */
+.choices{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.choice{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:transform .12s}
+.choice:active{transform:scale(.96)}
+.choice .desc{width:104px;font-size:11px;color:var(--mut);text-align:center;line-height:1.25;min-height:42px}
+.relic{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#fff4,transparent 60%),linear-gradient(180deg,#6b4bb5,#33215f);border:2px solid #c9b4ff;box-shadow:0 4px 0 #0008}
+.relic.sm{width:30px;height:30px;border-radius:9px;border-width:1.5px}
+.relicBar{display:flex;gap:4px;flex-wrap:wrap}
+.row{display:flex;gap:8px;align-items:center}
+.gridCards{display:flex;flex-wrap:wrap;gap:12px 8px;justify-content:center;padding:10px 4px 20px}
+.gridCards .card{cursor:pointer}
+.gridCards .card.picked{box-shadow:0 0 0 3px var(--good),0 0 18px #57e08aaa;transform:translateY(-4px)}
+.price{font-weight:900;font-size:14px;color:var(--gold);display:flex;align-items:center;gap:3px}
+.shopItem{display:flex;flex-direction:column;align-items:center;gap:5px;width:100px}
+.shopItem.sold{opacity:.3;pointer-events:none}
+.fuseBox{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0 2px}
+.slot{width:76px;height:96px;border-radius:12px;border:2px dashed #ffffff40;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:28px}
+.recipes{font-size:12px;color:var(--mut);display:grid;grid-template-columns:1fr;gap:5px;padding:6px 2px}
+.recipes div{background:#0004;border-radius:9px;padding:5px 8px;display:flex;align-items:center;gap:6px}
+.recipes b{color:#e6c4ff}
+.tabs{display:flex;gap:6px;margin:6px 0}
+.tabs button{font-family:"Lilita One";font-size:15px;color:#d8ccf2;background:#0005;border:2px solid var(--line);border-radius:10px;padding:6px 12px;cursor:pointer}
+.tabs button.on{background:var(--panel2);color:#fff;border-color:var(--gold)}
+.modal{position:absolute;inset:0;background:#05030bcc;display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+.modal.on{display:flex;animation:fadeIn .2s}
+.modal .panel{width:100%;max-width:380px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;max-height:90%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.modal .panel>*{flex-shrink:0;max-width:100%}
+.upg .t{min-width:0;flex:1}
+.upg .t span{line-height:1.3}
+.upg{width:100%;display:flex;align-items:center;gap:10px;background:#0004;border-radius:12px;padding:8px 10px}
+.upg .t{flex:1}.upg .t b{display:block;font-size:14px}.upg .t span{font-size:11.5px;color:var(--mut)}
+.dots{display:flex;gap:3px;margin-top:3px}.dots i{width:9px;height:9px;border-radius:50%;background:#ffffff22}.dots i.on{background:var(--gold)}
+.evIcon{margin:10px 0}
+.kv{display:flex;justify-content:space-between;width:100%;font-size:15px;padding:5px 2px;border-bottom:1px solid #ffffff12}
+.kv b{color:var(--gold)}
+#tip{position:absolute;z-index:30;max-width:230px;background:#0b0716f2;border:2px solid var(--line);border-radius:12px;padding:9px 11px;font-size:12px;line-height:1.35;pointer-events:none;display:none}
+#tip b{color:var(--gold);font-size:13px}
+</style>
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#0d0a1c"></head>
+<body>
+<div id="app">
+
+<!-- TÍTULO -->
+<section class="screen" id="title"><div class="wrap">
+  <div class="logo f"><div class="l1">ROMPETORRES</div><div class="l2">FORJA</div></div>
+  <canvas id="titleCv" width="300" height="190" style="display:none"></canvas><div style="height:min(34vh,300px)"></div>
+  <div class="stats"><span class="pill">💠 <span id="tShards">0</span></span><span class="pill">🏆 <span id="tWins">0</span></span><span class="pill">📅 <span id="tDaily">—</span></span></div>
+  <div class="menu">
+    <button class="btn" id="bContinue" style="display:none">Continuar partida</button>
+    <button class="btn" id="bNew">Nueva partida</button>
+    <button class="btn blue" id="bDaily">Reto diario</button>
+    <button class="btn dark" id="bMeta">Mejoras y cartas</button>
+    <button class="btn dark sm" id="bLab">🧪 Pruebas</button>
+    <button class="icon-btn" id="bSound" style="margin-top:2px">🔊</button>
+  </div>
+</div></section>
+
+<!-- MAPA -->
+<section class="screen" id="map"><div class="wrap">
+  <div class="hdr">
+    <span class="pill" id="mHp">❤️ 0</span><span class="pill" id="mGold">🪙 0</span>
+    <button class="btn dark sm" id="bDeck">Mazo <span id="mDeckN"></span></button>
+    <button class="icon-btn" id="bMapHelp">?</button><button class="icon-btn" id="bMapMenu">☰</button>
+  </div>
+  <div class="relicBar" id="mRelics" style="width:100%;margin-bottom:8px;min-height:30px"></div>
+  <div class="sub" id="mInfo" style="margin:-2px 0 8px;font-size:13px"></div>
+  <div id="mapScroll"><div id="mapInner"><svg id="mapSvg"></svg></div></div>
+  <div class="legend"><span>⚔️ Batalla</span><span>💀 Élite</span><span>🔥 Hoguera</span><span>🛒 Tienda</span><span>❓ Evento</span><span>💰 Tesoro</span><span>👹 Jefe int.</span><span>👑 Jefe</span></div>
+</div></section>
+
+<!-- BATALLA -->
+<section class="screen" id="battle">
+  <div id="cvWrap"><canvas id="cv"></canvas>
+    <div id="btop">
+      <div class="crownCol"><div class="crowns" id="eCrowns"><i></i><i></i><i></i></div><div class="crowns" id="pCrowns"><i></i><i></i><i></i></div></div>
+      <div id="timerBox"><div id="timer" class="f">3:00</div><div id="tlabel"></div></div>
+    </div>
+    <button class="icon-btn" id="bQuit">⏸</button><div id="banner" class="f"></div><div id="hand2"></div><div id="hint">👆 Toca una carta y después tu mitad del campo<br><small>(o arrástrala). Un puente = una torre. Controla el ⚒️ Yunque: +30% de elixir</small></div></div>
+  <div id="hud">
+    <div id="nextBox"><span>SIGUIENTE</span><div id="nextCard"></div></div>
+    <div id="hand"></div>
+  </div>
+  <div id="ebarWrap"><div id="ebar"><div id="efill"></div><div id="eticks"></div></div><div id="enum" style="left:calc(50% - min(50vw,220px) + 2px)">5</div></div>
+</section>
+
+<!-- RECOMPENSA -->
+<section class="screen" id="reward"><div class="wrap scroll" style="justify-content:flex-start">
+  <h2 class="f" style="margin-top:14px" id="rwTitle">¡Victoria!</h2>
+  <div class="sub" id="rwSub"></div>
+  <div class="row" style="justify-content:center;margin-top:10px" id="rwLoot"></div>
+  <div id="rwRelicBox" style="display:none;width:100%"><div class="sub" style="margin-top:14px">Elige una reliquia</div><div class="choices" id="rwRelics"></div></div>
+  <div class="sub" style="margin-top:14px">Elige una carta para tu mazo</div>
+  <div class="choices" id="rwCards"></div>
+  <button class="btn dark sm" id="rwSkip">Saltar carta</button>
+</div></section>
+
+<!-- HOGUERA / FORJA -->
+<section class="screen" id="rest"><div class="wrap">
+  <h2 class="f" style="margin-top:10px"><span class="hIc" data-k="it_lantern">🔥</span> Hoguera</h2>
+  <div class="sub">Descansa junto al fuego. Elige <b>una</b> opción.</div>
+  <div class="tabs" id="restTabs"><button data-t="forge" class="on">Forjar</button><button data-t="heal">Descansar</button><button data-t="up">Entrenar</button></div>
+  <div id="restBody" class="scroll" style="flex:1"></div>
+</div></section>
+
+<!-- TIENDA -->
+<section class="screen" id="shop"><div class="wrap">
+  <div class="hdr"><h2 class="f"><span class="hIc" data-k="ev_shop">🛒</span> Mercader</h2><span class="pill" id="sGold">🪙 0</span></div>
+  <div class="scroll" style="flex:1">
+    <div class="sub">Cartas</div><div class="choices" id="sCards"></div>
+    <div class="sub">Reliquias</div><div class="choices" id="sRelics"></div>
+    <div class="sub">Servicios</div><div class="choices" id="sServ"></div>
+  </div>
+  <button class="btn" id="sLeave">Seguir camino</button>
+</div></section>
+
+<!-- EVENTO -->
+<section class="screen" id="event"><div class="wrap" style="justify-content:center">
+  <div class="panel" style="padding:20px;width:100%;display:flex;flex-direction:column;align-items:center;gap:10px">
+    <div class="evIcon" id="evIcon"></div>
+    <h2 class="f" id="evTitle"></h2>
+    <div class="sub" id="evText" style="font-size:15px"></div>
+    <div id="evOpts" style="display:flex;flex-direction:column;gap:12px;margin-top:10px;width:100%;align-items:center"></div>
+  </div>
+</div></section>
+
+<!-- SELECTOR DE CARTAS (genérico) -->
+<section class="screen" id="picker"><div class="wrap">
+  <h2 class="f" id="pkTitle" style="margin-top:10px"></h2>
+  <div class="sub" id="pkSub"></div>
+  <div class="scroll" style="flex:1"><div class="gridCards" id="pkGrid"></div></div>
+  <div class="row"><button class="btn dark sm" id="pkCancel">Volver</button><button class="btn sm" id="pkOk" style="display:none">Confirmar</button></div>
+</div></section>
+
+<!-- MEJORAS -->
+<section class="screen" id="meta"><div class="wrap">
+  <div class="hdr"><h2 class="f">Mejoras</h2><span class="pill">💠 <span id="metaShards">0</span></span></div>
+  <div class="tabs" id="metaTabs"><button data-t="upg" class="on">Permanentes</button><button data-t="heroes">Héroes</button><button data-t="cards">Cartas</button><button data-t="rec">Recetas</button></div>
+  <div class="scroll" style="flex:1" id="metaBody"></div>
+  <button class="btn dark" id="metaBack" style="margin-top:8px">Volver</button>
+</div></section>
+
+<!-- FIN -->
+<section class="screen" id="over"><div class="wrap" style="justify-content:center">
+  <div class="panel" style="padding:22px;width:100%;display:flex;flex-direction:column;align-items:center;gap:8px">
+    <h2 class="f" id="ovTitle" style="font-size:38px"></h2>
+    <div class="sub" id="ovSub"></div>
+    <div style="width:100%;margin:10px 0" id="ovStats"></div>
+    <button class="btn" id="ovBtn">Volver al inicio</button>
+  </div>
+</div></section>
+
+<div class="modal" id="modal"><div class="panel" id="modalBody"></div></div>
+<div id="toast"></div>
+<div id="tip"></div>
+</div>
+<script>
+</script><script>const ART_SRC={};</script>
+<script src="art_0.js"></script>
+<script src="art_1.js"></script>
+<script src="art_2.js"></script>
+<script src="art_3.js"></script>
+<script src="art_4.js"></script>
+<script src="game.js"></script><script>
+</script>
+<script>if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});</script></body>
+</html>
