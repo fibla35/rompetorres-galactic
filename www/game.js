@@ -1164,7 +1164,7 @@ function getSprite(key, side, px){
 const ART_CACHE = {};
 function cardArt(key){
   if(ART_CACHE[key]) return ART_CACHE[key];
-  const S = 160, c = mkCanvas(S,S), g = c.getContext('2d');
+  const S = 160, c = mkCanvas(S*2,S*2), g = c.getContext('2d'); g.scale(2,2);
   const card = CARDS[key], sk = spriteKey(key);
   const im = imgFor(card.art || sk);
   const draw = (x,y,s) => { g.save(); g.translate(x,y); g.scale(s/100,s/100); if(im){ g.imageSmoothingQuality='high'; drawImgFit(g, im, 98, 99); } else if(SPR[sk]) SPR[sk](g, TEAM.p); g.restore(); };
